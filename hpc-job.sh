@@ -2,8 +2,9 @@
 #SBATCH --gres=gpu:a100:1
 #SBATCH --partition=a100
 #SBATCH --export=NONE
-#SBATCH --mail-user=luisa.e.neubig@fau.de
-#SBATCH --mail-type=BEGIN,END                                           
+
+####SBATCH --mail-user=luisa.e.neubig@fau.de
+####SBATCH --mail-type=BEGIN,END                                           
 
 unset SLURM_EXPORT_ENV                                                  
 export http_proxy=http://proxy.rrze.uni-erlangen.de:80
@@ -31,7 +32,7 @@ tar -xzf "$WORK/archives/${var}.tar.gz"
 
 # Load Repo Directory
 cd $HOME/hpc_test/
-python train.py -s "$WORKDIR/$var" -o "$OUTPUTDIR/$var" -d $var  -e 20 
+python train.py -s "$WORKDIR/$var" -o "$OUTPUTDIR/$var" -d $var -e 20 
 
 
 # clean up

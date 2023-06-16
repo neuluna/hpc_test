@@ -18,9 +18,9 @@ def trainSegmentation(X, y, Xval, yval, batch_size=4, optimizer="Adam", epochs=5
               y, 
               validation_data=(Xval,yval),
               batch_size=batch_size, 
-              epochs=epochs,
-              verbose=0, 
-              callbacks=[CSVLogger(str(folder.joinpath(f"{now}.csv")))])
+              epochs=epochs)
+              #verbose=0)
+              #callbacks=[CSVLogger(str(folder.joinpath(f"{now}.csv")))])
     
     return max(h.history['val_iou_score'])
 
@@ -35,7 +35,10 @@ if __name__ == "__main__":
 
     DIR_SOURCE = Path(args.source)
     DIR_OUTPUT = Path(args.output)
+    DATASET= args.dataset
+    EPOCHS = args.epochs
 
-    X, y, Xval, yval = load_data(DIR_SOURCE)
+    X, y, Xval, yval, test = load_data(DIR_SOURCE)
 
-    trainSegmentation(X, y, Xval, yval, batch_size=32, optimizer="Adam", epochs=20, folder="", num_classes=1)
+    history = trainSegmentation(X, y, Xval, yval, batch_size=32, optimizer="Adam", epochs=EPOCHS, folder="", num_classes=1)
+    print(history)
