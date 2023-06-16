@@ -30,8 +30,8 @@ cd "$WORKDIR/$var"
 tar -xzf "$WORK/archives/${var}.tar.gz"
 
 # Load Repo Directory
-cd $HOME/datapruning/datapruning/ga/
-python train.py -s "$WORKDIR/$var" -o "$OUTPUTDIR/$var" -d $var -g 10 -i 24 -e 20 -ng 1
+cd $HOME/hpc_test/
+python train.py -s "$WORKDIR/$var" -o "$OUTPUTDIR/$var" -d $var  -e 20 
 
 
 # clean up

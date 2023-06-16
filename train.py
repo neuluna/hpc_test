@@ -29,6 +29,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-s', '--source', default ="/shares/ANKI/Projects/", help="The path of to dataset dir.")
     parser.add_argument('-o', '--output', default = "/output", help="The path for output.")
+    parser.add_argument('-d', '--dataset', required=True)
+    parser.add_argument('-e', '--epochs', type=int, default=20)
     args = parser.parse_args()
 
     DIR_SOURCE = Path(args.source)
