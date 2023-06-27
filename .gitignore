@@ -1,0 +1,5 @@
+#File exclude
+*.o*
+
+#Folder exclude
+**/__pycache__/
