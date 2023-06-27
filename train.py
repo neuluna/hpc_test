@@ -8,7 +8,7 @@ from tqdm import tqdm
 from pathlib import Path
 
 
-def trainSegmentation(X, y, Xval, yval, batch_size=4, optimizer="Adam", epochs=5, num_classes=1):
+def trainSegmentation(X, y, Xval, yval, batch_size=64, optimizer="Adam", epochs=50, num_classes=1):
     model = UNet(classes=num_classes)
     model.compile(optimizer, dice_loss, metrics=[iou_score])
     

@@ -20,7 +20,7 @@ def load_data(path_ds, aug_dataset=True):
     image_number = [f_name for f_name in files_dataset if ext_mask not in f_name]
     
     #for x in range(len(image_number)):
-    for x in range(100):
+    for x in range(20000):
         mask_file = io.imread(path_ds / folder / f"{x}_{ext_mask}{filetype}") / 255.
         mask.append(mask_file)
         im_file = io.imread(path_ds / folder / f"{x}{filetype}")
