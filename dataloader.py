@@ -4,47 +4,33 @@ import numpy as np
 import cv2
 import albumentations as A
 import tensorflow as tf
-import matplotlib.pyplot as plt
 
+# Dataset structure of bagls archive
+folder = "training_224x224/"
+ext_mask = "seg"
+filetype = ".png"
 
-def load_data(path_ds, test_scenario=True):
+def load_data(path_ds, aug_dataset=True):
     np.random.seed(42)
     img = []
     mask = []  
 
-    # Define dataset structure
-    path = "training_224x224/"
-    ext_mask = "seg"
-    filetype = ".png"
-
-    # Dataset like BAGLS - 1 folder with all images and masks
-    files_dataset = os.listdir(path_ds / path)
-    # print(files_dataset)
+    # Dataset BAGLS - 1 folder with all images and masks
+    files_dataset = os.listdir(path_ds / folder)
     image_number = [f_name for f_name in files_dataset if ext_mask not in f_name]
-    print(len(image_number))
     
     #for x in range(len(image_number)):
     for x in range(100):
-        # Maske
-        mask_file = io.imread(path_ds / path / f"{x}_{ext_mask}{filetype}") / 255.
+        mask_file = io.imread(path_ds / folder / f"{x}_{ext_mask}{filetype}") / 255.
         mask.append(mask_file)
-
-        # Bild
-        im_file = io.imread(path_ds / path / f"{x}{filetype}")
+        im_file = io.imread(path_ds / folder / f"{x}{filetype}")
 
         if len(im_file.shape) == 3:
             im_file = cv2.cvtColor(im_file, cv2.COLOR_RGB2GRAY)
         img.append(im_file / 255.)
     
-
     img_arr = np.array([tf.expand_dims(i, -1) for i in np.array(img)])
     mask_arr = np.array([tf.expand_dims(i, -1) for i in np.array(mask)])
-
-
-    fig, (ax1,ax2) = plt.subplots(1,2, figsize=(15,5))
-    ax1.imshow(img_arr[0,:,:,:])
-    ax2.imshow(mask_arr[0,:,:,:])
-    plt.savefig(f"output/0.png")
 
     # Shuffle images and masks in same order
     indices = np.arange(len(img))
@@ -61,7 +47,12 @@ def load_data(path_ds, test_scenario=True):
     val_img, val_mask = img_arr[val_ind], mask_arr[val_ind]
     ts_img = img_arr[ts_ind]
 
+    if aug_dataset:
+       tr_img, tr_mask = augment_dataset(tr_img, tr_mask)
 
+    return tr_img, tr_mask, val_img, val_mask, ts_img
+
+def augment_dataset(tr_img, tr_mask):
     # Add augmentation to train dataset
     transform = A.Compose(
         [A.HorizontalFlip(p=0.5), A.Rotate(limit=10)]
@@ -74,7 +65,5 @@ def load_data(path_ds, test_scenario=True):
         x_mask.append(np.array(transformed_train["mask"]))
     tr_img = np.array(x_img)
     tr_mask = np.array(x_mask)
-
-
-    return tr_img, tr_mask, val_img, val_mask, ts_img
-
+    
+    return tr_img, tr_mask

@@ -34,7 +34,6 @@ tar -xzf "$WORK/archives/${var}.tar.gz"
 cd $HOME/hpc_test/
 python train.py -s "$WORKDIR/$var" -o "$OUTPUTDIR/$var" -d $var -e 20 
 
-
 # clean up
 cd $HOME
 rm -rf "$TMPDIR/$SLURM_JOB_ID/$var"

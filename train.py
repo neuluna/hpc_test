@@ -1,6 +1,5 @@
 from unet import UNet
 from dataloader import load_data
-from datetime import datetime
 from tensorflow.keras.callbacks import CSVLogger, ModelCheckpoint
 from segmentation_models.losses import dice_loss
 from segmentation_models.metrics import iou_score
@@ -9,8 +8,7 @@ from tqdm import tqdm
 from pathlib import Path
 
 
-def trainSegmentation(X, y, Xval, yval, batch_size=4, optimizer="Adam", epochs=5, folder="", num_classes=1):
-    now = datetime.now().strftime("%Y%m%d_%H%M%S")
+def trainSegmentation(X, y, Xval, yval, batch_size=4, optimizer="Adam", epochs=5, num_classes=1):
     model = UNet(classes=num_classes)
     model.compile(optimizer, dice_loss, metrics=[iou_score])
     
@@ -19,10 +17,9 @@ def trainSegmentation(X, y, Xval, yval, batch_size=4, optimizer="Adam", epochs=5
               validation_data=(Xval,yval),
               batch_size=batch_size, 
               epochs=epochs)
-              #verbose=0)
-              #callbacks=[CSVLogger(str(folder.joinpath(f"{now}.csv")))])
     
-    return max(h.history['val_iou_score'])
+    return h.history
+   
 
 
 if __name__ == "__main__":
@@ -40,5 +37,5 @@ if __name__ == "__main__":
 
     X, y, Xval, yval, test = load_data(DIR_SOURCE)
 
-    history = trainSegmentation(X, y, Xval, yval, batch_size=32, optimizer="Adam", epochs=EPOCHS, folder="", num_classes=1)
-    print(history)
+    history = trainSegmentation(X, y, Xval, yval, batch_size=32, optimizer="Adam", epochs=EPOCHS, num_classes=1)
+    print(history['val_iou_score'])
