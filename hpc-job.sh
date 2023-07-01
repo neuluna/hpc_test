@@ -1,10 +1,7 @@
 #!/bin/bash -l
 #SBATCH --gres=gpu:a100:1
 #SBATCH --partition=a100
-#SBATCH --export=NONE
-
-####SBATCH --mail-user=luisa.e.neubig@fau.de
-####SBATCH --mail-type=BEGIN,END                                           
+#SBATCH --export=NONE                                    
 
 unset SLURM_EXPORT_ENV                                                  
 export http_proxy=http://proxy.rrze.uni-erlangen.de:80
@@ -20,17 +17,19 @@ WORKDIR="$TMPDIR/$SLURM_JOB_ID"
 mkdir "$WORKDIR"
 
 # Load necessary modules
-module load python
-source activate /home/woody/iwb3/iwb3001h/software/privat/conda/envs/dp01
+## module load python
+## source activate /home/woody/iwb3/iwb3001h/software/privat/conda/envs/dp01
 
 var=$1  
-
 mkdir "$WORKDIR/$var/"
 mkdir "$OUTPUTDIR/$var"
 cd "$WORKDIR/$var"
+#Extract the data archive to the tmp dir
 tar -xzf "$WORK/archives/${var}.tar.gz"
 
 # Load Repo Directory
+# -d defines the dataset
+# -e defines the number of epochs to run the training
 cd $HOME/hpc_test/
 python train.py -s "$WORKDIR/$var" -o "$OUTPUTDIR/$var" -d $var -e 20 
 

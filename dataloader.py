@@ -4,6 +4,7 @@ import numpy as np
 import cv2
 import albumentations as A
 import tensorflow as tf
+from tqdm import tqdm
 
 # Dataset structure of bagls archive
 folder = "training_224x224/"
@@ -19,6 +20,7 @@ def load_data(path_ds, aug_dataset=True):
     files_dataset = os.listdir(path_ds / folder)
     image_number = [f_name for f_name in files_dataset if ext_mask not in f_name]
     
+    #Had to limit the size of the images, otherwise OOM error
     #for x in range(len(image_number)):
     for x in range(20000):
         mask_file = io.imread(path_ds / folder / f"{x}_{ext_mask}{filetype}") / 255.
