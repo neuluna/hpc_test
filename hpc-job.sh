@@ -17,8 +17,8 @@ WORKDIR="$TMPDIR/$SLURM_JOB_ID"
 mkdir "$WORKDIR"
 
 # Load necessary modules
-## module load python
-## source activate /home/woody/iwb3/iwb3001h/software/privat/conda/envs/dp01
+module load python
+source activate /home/woody/iwb3/iwb3001h/software/privat/conda/envs/dp01
 
 var=$1  
 mkdir "$WORKDIR/$var/"
